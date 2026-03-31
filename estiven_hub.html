@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estiven Tabares | Perfil Personal</title>
+    <style>
+        :root {
+            --gold: #d4af37;
+            --bg-dark: #050505;
+            --card: #111;
+            --text: #ffffff;
+            --gray: #888;
+            --ooc-red: #ff5252;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', 'Segoe UI', sans-serif; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* --- PANTALLA DE ENTRADA --- */
+        #gate {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .identity-btn {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 20px 60px;
+            font-size: 1rem;
+            letter-spacing: 8px;
+            cursor: pointer;
+            transition: 0.4s;
+            text-transform: uppercase;
+        }
+
+        .identity-btn:hover {
+            background: var(--gold);
+            color: #000;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
+        }
+
+        /* --- WEB PRINCIPAL --- */
+        #main-app {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: 550px 1fr;
+            opacity: 0;
+            transform: scale(1.02);
+            transition: 1.5s ease;
+        }
+
+        .show #main-app { opacity: 1; transform: scale(1); }
+
+        .photo-side {
+            background: url('perfil.png') no-repeat center center;
+            background-size: cover;
+            position: relative;
+            border-right: 1px solid #1a1a1a;
+        }
+
+        .photo-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, transparent 0%, var(--bg-dark) 95%);
+        }
+
+        .content-area {
+            padding: 80px 100px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .header { margin-bottom: 60px; }
+        .header h1 { font-size: 5.5rem; letter-spacing: -4px; line-height: 0.85; margin-bottom: 20px; }
+        .header p { color: var(--gold); text-transform: uppercase; letter-spacing: 6px; font-size: 0.85rem; font-weight: bold; }
+
+        /* Información Clave (Sin Dinero) */
+        .info-bar {
+            display: flex;
+            gap: 50px;
+            margin-bottom: 70px;
+            border-top: 1px solid #1a1a1a;
+            border-bottom: 1px solid #1a1a1a;
+            padding: 30px 0;
+        }
+
+        .info-item span { color: var(--gray); text-transform: uppercase; font-size: 0.65rem; display: block; margin-bottom: 8px; letter-spacing: 2px; }
+        .info-item .val { font-size: 1.4rem; font-weight: 600; color: #eee; }
+
+        /* Cuerpo de Texto */
+        article section { margin-bottom: 50px; }
+        article h2 { color: var(--gold); margin-bottom: 20px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 4px; }
+        article p { color: #aaa; line-height: 1.9; font-size: 1.1rem; max-width: 750px; text-align: justify; }
+
+        /* Menú Hamburguesa OOC */
+        .menu-btn {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            z-index: 1100;
+            cursor: pointer;
+            width: 30px;
+            height: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .menu-btn div { height: 1px; width: 100%; background: var(--gold); transition: 0.3s; }
+
+        #ooc-panel {
+            position: fixed;
+            top: 0; right: -450px;
+            width: 450px;
+            height: 100%;
+            background: #080808;
+            z-index: 1050;
+            padding: 120px 60px;
+            transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 1px solid #1a1a1a;
+        }
+        #ooc-panel.active { right: 0; }
+
+        .ooc-title { color: var(--ooc-red); font-size: 0.8rem; margin-bottom: 40px; letter-spacing: 3px; }
+        .ooc-line { margin-bottom: 25px; border-bottom: 1px solid #111; padding-bottom: 10px; }
+        .ooc-line label { font-size: 0.6rem; color: #444; text-transform: uppercase; }
+        .ooc-line p { font-size: 1rem; color: #999; margin-top: 5px; }
+
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-thumb { background: #333; }
+    </style>
+</head>
+<body>
+
+    <div id="gate">
+        <button class="identity-btn" onclick="unlock()">Acceder al Perfil</button>
+    </div>
+
+    <div class="menu-btn" onclick="toggleOOC()">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+
+    <aside id="ooc-panel">
+        <h3 class="ooc-title">// INFORMACIÓN OOC</h3>
+        <div class="ooc-line"><label>Edad Usuario</label><p>16 Años</p></div>
+        <div class="ooc-line"><label>Disponibilidad</label><p>2 - 3 Horas Diarias</p></div>
+        <div class="ooc-line"><label>Región</label><p>Colombia</p></div>
+        <div class="ooc-line"><label>Meta de Rol</label><p>Progresión hacia facción legal (LSPD/MILITAR)</p></div>
+    </aside>
+
+    <div id="main-app">
+        <div class="photo-side">
+            <div class="photo-overlay"></div>
+        </div>
+
+        <main class="content-area">
+            <header class="header">
+                <p>Identidad Civil</p>
+                <h1>Estiven<br>Tabares</h1>
+            </header>
+
+            <section class="info-bar">
+                <div class="info-item"><span>Registro</span><div class="val">#110276</div></div>
+                <div class="info-item"><span>Origen</span><div class="val">Medellín, CO</div></div>
+                <div class="info-item"><span>Residencia</span><div class="val">3.5 Años</div></div>
+                <div class="info-item"><span>Estado</span><div class="val">Servicio Civil</div></div>
+            </section>
+
+            <article>
+                <section>
+                    <h2>Raíces y Determinación</h2>
+                    <p>Crecí en un pueblo donde la delincuencia dictaba las reglas y el miedo era el pan de cada día. Ver esa realidad desde niño no me doblegó, me dio una misión: quería ser el cambio que mi entorno necesitaba. No me conformé con ser un espectador de la decadencia; me esforcé el doble para salir de allí, manteniendo la frente en alto y las manos limpias.</p>
+                </section>
+
+                <section>
+                    <h2>Presente: El Camino Recorrido</h2>
+                    <p>Salí de Medellín con la disciplina inquebrantable forjada en el servicio militar. En Los Santos, cada amanecer me encuentra al volante, operando con la precisión de quien sabe que cada calle cuenta una historia. Mi taxi no es solo un vehículo; es mi base de operaciones, el lugar donde demuestro mi honestidad y mi conocimiento absoluto de esta ciudad que ahora llamo hogar.</p>
+                </section>
+                
+                <section>
+                    <h2>Futuro: Visión de Orden</h2>
+                    <p>No aspiro a la rutina eterna. Mi preparación es constante, mi mente está en el siguiente nivel. Estoy decidido a esforzarme hasta que mi uniforme sea una realidad. Quiero dar el paso definitivo hacia las fuerzas del orden, donde la lealtad y el coraje definen quiénes somos. El servicio me espera, y estoy listo para portar la responsabilidad que conlleva proteger el país.</p>
+                </section>
+            </article>
+        </main>
+    </div>
+
+    <script>
+        function unlock() {
+            document.getElementById('gate').style.opacity = '0';
+            document.getElementById('gate').style.pointerEvents = 'none';
+            setTimeout(() => { document.body.classList.add('show'); }, 400);
+        }
+
+        function toggleOOC() {
+            document.getElementById('ooc-panel').classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
